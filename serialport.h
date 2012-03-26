@@ -1,5 +1,7 @@
 #ifndef SERIALPORT_H
 #define SERIALPORT_H
+#include <inttypes.h>
+#include <windows.h>
 
 HANDLE openSerialPort(LPCSTR portname)
 {
