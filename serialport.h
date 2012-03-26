@@ -3,6 +3,7 @@
 #include <inttypes.h>
 #include <windows.h>
 //#include <strsafe.h>
+
 enum Baudrate
 {
 	B50		= 50,
@@ -22,12 +23,14 @@ enum Baudrate
 	B500000 = 500000,
 	B1000000= 1000000
 };
+
 enum Stopbits
 {
 	one = ONESTOPBIT,
-	onePointFive= ONE5STOPBITS,
+	onePointFive = ONE5STOPBITS,
 	two = TWOSTOPBITS
 };
+
 enum Paritycheck
 {
 	even = EVENPARITY,
@@ -74,9 +77,9 @@ void ErrorExit(LPTSTR lpszFunction)
 /**
 	\brief Opens a new connection to a serial port
 	\param portname		name of the serial port(COM1 - COM9 or \\\\.\\COM1-COM256)
-	\param baudrate		the baudrate of this port (for example 9600)
-	\param stopbits		th nuber of stoppbits (one, onePointFive or two)
-	\param parity		the parity (even, odd, off or mark)
+	\param baudrate		baud rate of this port (for example 9600)
+	\param stopbits		number of stopbits (one, onePointFive or two)
+	\param parity		parity (even, odd, off or mark)
 	\return				HANDLE to the serial port
 	*/
 HANDLE openSerialPort(LPCSTR portname,enum Baudrate baudrate, enum Stopbits stopbits, enum Paritycheck parity)
@@ -90,7 +93,7 @@ HANDLE openSerialPort(LPCSTR portname,enum Baudrate baudrate, enum Stopbits stop
 		0,
 		0);
 	if (hSerial == INVALID_HANDLE_VALUE) {
-		ErrorExit("Create File failed");
+		ErrorExit("create file failed");
 	}
 	DCB dcbSerialParams = {0};
 	dcbSerialParams.DCBlength=sizeof(dcbSerialParams);
@@ -102,7 +105,7 @@ HANDLE openSerialPort(LPCSTR portname,enum Baudrate baudrate, enum Stopbits stop
 	dcbSerialParams.StopBits=stopbits;
 	dcbSerialParams.Parity=parity;
 	if(!SetCommState(hSerial, &dcbSerialParams)){
-		 ErrorExit("could not set State");
+		 ErrorExit("could not set state");
 	}
 	COMMTIMEOUTS timeouts={0};
 	timeouts.ReadIntervalTimeout=50;
@@ -118,12 +121,12 @@ HANDLE openSerialPort(LPCSTR portname,enum Baudrate baudrate, enum Stopbits stop
 
 /**
 	\brief Read data from the serial port
-	\param hSerial	File HANDLE to the serial port
-	\param buffer	pointer to the area where the read data will be written
-	\param buffersize maximal size of the buffer area
-	\return			amount of data that was read
+	\param hSerial		File HANDLE to the serial port
+	\param buffer		pointer to the area where the read data will be written
+	\param buffersize	maximal size of the buffer area
+	\return				amount of data that was read
 	*/
-DWORD readFromSerialPort(HANDLE hSerial, uint8_t * buffer, int buffersize)
+DWORD readFromSerialPort(HANDLE hSerial, char * buffer, int buffersize)
 {
     DWORD dwBytesRead = 0;
     if(!ReadFile(hSerial, buffer, buffersize, &dwBytesRead, NULL)){
@@ -139,7 +142,7 @@ DWORD readFromSerialPort(HANDLE hSerial, uint8_t * buffer, int buffersize)
 	\param length	amount of data to be read
 	\return			amount of data that was written
 	*/
-DWORD writeToSerialPort(HANDLE hSerial, uint8_t * data, int length)
+DWORD writeToSerialPort(HANDLE hSerial, char * data, int length)
 {
 
 	DWORD dwBytesRead = 0;
@@ -147,7 +150,6 @@ DWORD writeToSerialPort(HANDLE hSerial, uint8_t * data, int length)
 		ErrorExit("writing");
 	}
 	return dwBytesRead;
-
 }
 
 void closeSerialPort(HANDLE hSerial)
