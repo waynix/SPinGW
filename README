@@ -1,1 +1,33 @@
 This Repository contains a wrapper to access the SerialPort in MinGW.
+
+Dependencies:
+Windows (tested under XP and 7)
+MinGW (not tested with Visual Studio and Cygwin)
+
+
+Usage:
+1. Copy or fork SPinGW
+2. Include serialport.h to your program.
+3. call openSerialPort from your programm
+4. use writeToSerialPort and readFromSerialPort to transfer data
+5. close the port with closeSerialPort
+
+
+Example main.c: 
+#include <stdio.h>
+#include "serialport.h"
+int main(void)
+{
+	HANDLE h = openSerialPort("COM5",B9600,one,off);
+	uint8_t sendbuffer[] = "test";
+	uint8_t readbuffer[100];
+	//write test
+	int bytesWritten = writeToSerialPort(h,sendbuffer,strlen(sendbuffer));
+	printf("%d Bytes were written\n",bytesWritten);
+	//read something
+	int bytesRead = readFromSerialPort(h,readbuffer,99);
+	readbuffer[bytesRead]=0;
+	printf("%d Bytes were read:%s\n",bytesRead,readbuffer);
+	closeSerialPort(h);
+    return 0;
+}
