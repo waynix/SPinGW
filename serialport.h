@@ -2,11 +2,10 @@
 #define SERIALPORT_H
 #include <inttypes.h>
 #include <windows.h>
-//#include <strsafe.h>
 
 enum Baudrate
 {
-	B50		= 50,
+	B50	= 50,
 	B110	= 110,
 	B150	= 150,
 	B300	= 300,
@@ -77,10 +76,10 @@ void ErrorExit(LPTSTR lpszFunction)
 /**
 	\brief Opens a new connection to a serial port
 	\param portname		name of the serial port(COM1 - COM9 or \\\\.\\COM1-COM256)
-	\param baudrate		baud rate of this port (for example 9600)
-	\param stopbits		number of stopbits (one, onePointFive or two)
-	\param parity		parity (even, odd, off or mark)
-	\return				HANDLE to the serial port
+	\param baudrate		the baudrate of this port (for example 9600)
+	\param stopbits		th nuber of stoppbits (one, onePointFive or two)
+	\param parity		the parity (even, odd, off or mark)
+	\return			HANDLE to the serial port
 	*/
 HANDLE openSerialPort(LPCSTR portname,enum Baudrate baudrate, enum Stopbits stopbits, enum Paritycheck parity)
 {
@@ -144,7 +143,6 @@ DWORD readFromSerialPort(HANDLE hSerial, char * buffer, int buffersize)
 	*/
 DWORD writeToSerialPort(HANDLE hSerial, char * data, int length)
 {
-
 	DWORD dwBytesRead = 0;
 	if(!WriteFile(hSerial, data, length, &dwBytesRead, NULL)){
 		ErrorExit("writing");
