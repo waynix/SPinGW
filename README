@@ -19,8 +19,8 @@ Example main.c:
 int main(void)
 {
 	HANDLE h = openSerialPort("COM5",B9600,one,off);
-	uint8_t sendbuffer[] = "test";
-	uint8_t readbuffer[100];
+	char sendbuffer[] = "test";
+	char readbuffer[100];
 	//write test
 	int bytesWritten = writeToSerialPort(h,sendbuffer,strlen(sendbuffer));
 	printf("%d Bytes were written\n",bytesWritten);

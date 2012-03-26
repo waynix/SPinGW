@@ -1,6 +1,5 @@
 #ifndef SERIALPORT_H
 #define SERIALPORT_H
-#include <inttypes.h>
 #include <windows.h>
 
 enum Baudrate
@@ -62,7 +61,7 @@ void ErrorExit(LPTSTR lpszFunction)
     lpDisplayBuf = (LPVOID)LocalAlloc(LMEM_ZEROINIT, 
         (lstrlen((LPCTSTR)lpMsgBuf) + lstrlen((LPCTSTR)lpszFunction) + 40) * sizeof(TCHAR)); 
     sprintf((LPTSTR)lpDisplayBuf, 
-        TEXT("%s failed with error %d: %s"), 
+        TEXT("%s failed with error %d:\n%s"), 
         lpszFunction, dw, lpMsgBuf); 
     MessageBox(NULL, (LPCTSTR)lpDisplayBuf, TEXT("Error"), MB_OK); 
 
@@ -92,19 +91,19 @@ HANDLE openSerialPort(LPCSTR portname,enum Baudrate baudrate, enum Stopbits stop
 		0,
 		0);
 	if (hSerial == INVALID_HANDLE_VALUE) {
-		ErrorExit("create file failed");
+		ErrorExit("CreateFile");
 	}
 	DCB dcbSerialParams = {0};
 	dcbSerialParams.DCBlength=sizeof(dcbSerialParams);
 	if (!GetCommState(hSerial, &dcbSerialParams)) {
-		 ErrorExit("could not retrieve state");
+		 ErrorExit("GetCommState");
 	}
 	dcbSerialParams.BaudRate=baudrate;
 	dcbSerialParams.ByteSize=8;
 	dcbSerialParams.StopBits=stopbits;
 	dcbSerialParams.Parity=parity;
 	if(!SetCommState(hSerial, &dcbSerialParams)){
-		 ErrorExit("could not set state");
+		 ErrorExit("SetCommState");
 	}
 	COMMTIMEOUTS timeouts={0};
 	timeouts.ReadIntervalTimeout=50;
@@ -113,7 +112,7 @@ HANDLE openSerialPort(LPCSTR portname,enum Baudrate baudrate, enum Stopbits stop
 	timeouts.WriteTotalTimeoutConstant=50;
 	timeouts.WriteTotalTimeoutMultiplier=10;
 	if(!SetCommTimeouts(hSerial, &timeouts)){
-		ErrorExit("could not set timeouts");
+		ErrorExit("SetCommTimeouts");
 	}
 	return hSerial;
 }
@@ -129,7 +128,7 @@ DWORD readFromSerialPort(HANDLE hSerial, char * buffer, int buffersize)
 {
     DWORD dwBytesRead = 0;
     if(!ReadFile(hSerial, buffer, buffersize, &dwBytesRead, NULL)){
-        ErrorExit("reading");
+        ErrorExit("ReadFile");
     }
     return dwBytesRead;
 }
@@ -145,7 +144,7 @@ DWORD writeToSerialPort(HANDLE hSerial, char * data, int length)
 {
 	DWORD dwBytesRead = 0;
 	if(!WriteFile(hSerial, data, length, &dwBytesRead, NULL)){
-		ErrorExit("writing");
+		ErrorExit("WriteFile");
 	}
 	return dwBytesRead;
 }
