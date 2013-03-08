@@ -7,13 +7,13 @@ MinGW (not tested with Visual Studio and Cygwin)
 
 Usage:
 1. Copy or fork SPinGW
-2. Include serialport.h to your program.
+2. Include serialport.h and serialport.c to your program.
 3. Call openSerialPort from your program.
 4. Use writeToSerialPort and readFromSerialPort to transfer data
 5. Close the port with closeSerialPort when the communication is finished
 
 
-Example main.c: 
+example.c: 
 #include <stdio.h>
 #include "serialport.h"
 int main(void)
@@ -31,3 +31,5 @@ int main(void)
 	closeSerialPort(h);
     return 0;
 }
+
+6. compile gcc example.c serialport.c -o example.exe
