@@ -34,3 +34,6 @@ int main(void)
 }
 
 6. compile gcc example.c serialport.c -o example.exe
+
+FAQ:
+Comports with a bigger number (I believe bigger than 9) can be used by with their UNC Paths \\\\.\\COM11 (thanks to jaui)
