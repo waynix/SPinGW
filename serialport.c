@@ -54,19 +54,19 @@ HANDLE openSerialPort(LPCSTR portname,enum Baudrate baudrate, enum Stopbits stop
 		0,
 		0);
 	if (hSerial == INVALID_HANDLE_VALUE) {
-		ErrorExit("CreateFile");
+		ErrorExit("Open Port: ");
 	}
 	DCB dcbSerialParams = {0};
 	dcbSerialParams.DCBlength=sizeof(dcbSerialParams);
 	if (!GetCommState(hSerial, &dcbSerialParams)) {
-		 ErrorExit("GetCommState");
+		 ErrorExit("Retrieving serial port parameters failed");
 	}
 	dcbSerialParams.BaudRate=baudrate;
 	dcbSerialParams.ByteSize=8;
 	dcbSerialParams.StopBits=stopbits;
 	dcbSerialParams.Parity=parity;
 	if(!SetCommState(hSerial, &dcbSerialParams)){
-		 ErrorExit("SetCommState");
+		 ErrorExit("Setting Parameters failed");
 	}
 	COMMTIMEOUTS timeouts={0};
 	timeouts.ReadIntervalTimeout=50;
@@ -75,7 +75,7 @@ HANDLE openSerialPort(LPCSTR portname,enum Baudrate baudrate, enum Stopbits stop
 	timeouts.WriteTotalTimeoutConstant=50;
 	timeouts.WriteTotalTimeoutMultiplier=10;
 	if(!SetCommTimeouts(hSerial, &timeouts)){
-		ErrorExit("SetCommTimeouts");
+		ErrorExit("Setting timeouts failed");
 	}
 	return hSerial;
 }
@@ -112,7 +112,7 @@ DWORD writeToSerialPort(HANDLE hSerial, char * data, int length)
 	return dwBytesRead;
 }
 
-void closeSerialPort(HANDLE hSerial)
+BOOL closeSerialPort(HANDLE hSerial)
 {
-	CloseHandle(hSerial);
+	return CloseHandle(hSerial);
 }

@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include "serialport.h"
+
 int main(void)
 {
 	HANDLE h = openSerialPort("COM1",B9600,one,off);
@@ -12,6 +13,8 @@ int main(void)
 	int bytesRead = readFromSerialPort(h,readbuffer,99);
 	readbuffer[bytesRead]=0;
 	printf("%d Bytes were read:%s\n",bytesRead,readbuffer);
-	closeSerialPort(h);
-    return 0;
+	if(!closeSerialPort(h)){
+		ErrorExit("Closing Port failed: ");
+	}
+	return 0;
 }
