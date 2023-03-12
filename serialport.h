@@ -2,9 +2,13 @@
 #define SERIALPORT_H
 #include <windows.h>
 
+/**
+ * \brief A list of standard baudrates
+ * \note there may be additional conigurations available for your hardware
+ */
 enum Baudrate
 {
-	B50	= 50,
+	B50	    = 50,      // not listed in https://learn.microsoft.com/en-us/windows/win32/api/winbase/ns-winbase-dcb
 	B110	= 110,
 	B150	= 150,
 	B300	= 300,
@@ -19,9 +23,12 @@ enum Baudrate
 	B230400	= 230400,
 	B460800	= 460800,
 	B500000 = 500000,
-	B1000000= 1000000
+	B1000000= 1000000  // not listed in https://learn.microsoft.com/en-us/windows/win32/api/winbase/ns-winbase-dcb
 };
 
+/**
+ * \brief Possible values for the nuber of stop bits
+ */
 enum Stopbits
 {
 	one = ONESTOPBIT,
@@ -29,15 +36,22 @@ enum Stopbits
 	two = TWOSTOPBITS
 };
 
+/**
+ * \brief Available parity operation modes modes
+ */
 enum Paritycheck
 {
-	even = EVENPARITY,
-	odd  = ODDPARITY,
-	off  = NOPARITY,
-	mark = MARKPARITY	
+	off  = NOPARITY,     // disable parity checking
+	even = EVENPARITY,   // enable even parity
+	odd  = ODDPARITY,    // enable odd parity
+	mark = MARKPARITY,   // enable mark parity
+	space = SPACEPARITY  // enable space parity
 };
 
-
+/**
+ * \brief Display the error information from the operation system and exit the program.
+ * \param lpszFunction Additional input for the user printed before the error message.
+ */
 void ErrorExit(LPTSTR lpszFunction); 
 
 
@@ -68,6 +82,11 @@ DWORD readFromSerialPort(HANDLE hSerial, char * buffer, int buffersize);
 	*/
 DWORD writeToSerialPort(HANDLE hSerial, char * data, int length);
 
-void closeSerialPort(HANDLE hSerial);
+/**
+ * Close the port
+ * \param hSerial File HANDLE to the serial port that need to be closed
+ * Will return false on success
+ */
+BOOL closeSerialPort(HANDLE hSerial);
 
 #endif
